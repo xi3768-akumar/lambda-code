@@ -1,0 +1,22 @@
+version: 0.2
+
+phases:
+  install:
+    commands:
+      - echo Entered the install phase...
+      - apt-get update -y
+      - apt-get install -y zip
+    finally:
+      - echo This always runs even if the update or install command fails 
+
+  build:
+    commands:
+      - echo Entered the build phase...
+      - zip test.zip lambda/test1/test.py
+      - ls
+    finally:
+      - echo This always runs even if the install command fails
+  post_build:
+    commands:
+      - echo Entered the post_build phase...
+      - echo Build completed on `date`
