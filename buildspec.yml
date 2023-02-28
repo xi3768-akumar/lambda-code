@@ -6,6 +6,7 @@ phases:
       - echo Entered the install phase...
       - apt-get update -y
       - apt-get install -y zip
+      - apt-get install -y awscli
     finally:
       - echo This always runs even if the update or install command fails 
 
@@ -14,7 +15,7 @@ phases:
       - echo Entered the build phase...
       - cd lambda/test1 && zip test.zip test.py
       - ls 
-      - ls lambda/test1
+      - aws s3 ls
     finally:
       - echo This always runs even if the install command fails
   post_build:
