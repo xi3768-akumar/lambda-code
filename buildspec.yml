@@ -15,7 +15,7 @@ phases:
       - echo Entered the build phase...
       - cd lambda/test1 && zip test.zip test.py
       - ls 
-      - aws s3 ls
+      - aws s3 cp test.zip s3://test-lambda-code-1/lambda/test1.zip
     finally:
       - echo This always runs even if the install command fails
   post_build:
