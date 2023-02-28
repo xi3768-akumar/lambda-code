@@ -12,8 +12,9 @@ phases:
   build:
     commands:
       - echo Entered the build phase...
-      - zip test.zip lambda/test1/test.py
-      - ls
+      - cd lambda/test1 && zip test.zip test.py
+      - ls 
+      - ls lambda/test1
     finally:
       - echo This always runs even if the install command fails
   post_build:
