@@ -1,4 +1,4 @@
-# Test 2 working fine platform team
+# Test 2
 import json
 
 print('Loading function')

@@ -1,4 +1,4 @@
-# Test 1 is going on to test Lets Play Platform team yessss
+# Test 1
 import json
 
 print('Loading function')
