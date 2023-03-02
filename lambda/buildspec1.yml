@@ -42,7 +42,8 @@ phases:
        - echo "${CODEBUILD_BUILD_ARN}"
        - |
          if "$CODEBUILD_SRC_DIR/lambda/test1/test.py" -nt "$CODEBUILD_SRC_DIR/lambda/test1/test.zip"; then
-          cd lambda/test1 && zip test.zip test.py
+          cd $CODEBUILD_SRC_DIR/lambda/test1/ && zip test.zip test.py
+          ls
           aws s3 cp test.zip s3://test-lambda-code-1/lambda-1/test.zip
           aws lambda update-function-code --function-name arn:aws:lambda:ap-south-1:474532148129:function:test --s3-bucket test-lambda-code-1 --s3-key lambda-1/test.zip
          fi
