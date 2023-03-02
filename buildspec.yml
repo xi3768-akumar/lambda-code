@@ -1,11 +1,5 @@
 version: 0.2
 
-variables:
-  bucket_name: "test-lambda-code-1"
-  lambda_functions:
-    - test-1
-    - test-2
-
 phases:
   install:
     commands:
@@ -19,26 +13,12 @@ phases:
   build:
     commands:
       - echo Entered the build phase...
-     
-      
-      - for lambda_function in $lambda_functions; do 
-          cd lambda/$lambda_function && zip test*.zip test.py 
-          aws s3 cp test.zip s3://$bucket_name/$lambda_function/test.zip 
-
-          if ! aws lambda get-function --function-name arn:aws:lambda:us-east-1:287882505924:function:$lambda_function >/dev/null 2>&1; then 
-            aws lambda create-function --function-name $lambda_function --runtime python3.8 --handler test.lambda_handler --role arn:aws:iam::287882505924:role/LambdaExecutionRole --code S3Bucket=$bucket_name,S3Key=$lambda_function/test.zip 
-          else 
-            aws lambda update-function-code --function-name arn:aws:lambda:us-east-1:287882505924:function:$lambda_function --s3-bucket $bucket_name --s3-key $lambda_function/test.zip 
-            if ! cmp -s lambda/$lambda_function/test.py <(aws lambda get-function --function-name arn:aws:lambda:us-east-1:287882505924:function:$lambda_function --query 'Code.Location' --output text | xargs aws s3 cp - - | zcat); then 
-              aws s3 cp lambda/$lambda_function/test.py s3://$bucket_name/$lambda_function/test.py 
-              aws lambda update-function-configuration --function-name arn:aws:lambda:us-east-1:287882505924:function:$lambda_function --handler test.lambda_handler --timeout 3 --memory-size 128 --environment Variables={BUCKET_NAME=$bucket_name,LAMBDA_FUNCTION=$lambda_function} 
-            fi 
-          fi 
-        done
-
+      - cd lambda/function-1 && zip test.zip test.py
+      - ls 
+      - aws s3 cp test.zip s3://krny-lambda-code/function-1/test.zip
+      - aws lambda update-function-code --function-name  arn:aws:lambda:us-east-1:287882505924:function:test --s3-bucket krny-lambda-code --s3-key function-1/test.zip
     finally:
       - echo Installation Completed...
-
   post_build:
     commands:
       - echo Entered the post_build phase...
