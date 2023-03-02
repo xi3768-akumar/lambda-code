@@ -37,7 +37,9 @@ phases:
       - |
         for function_dir in lambda/*; do
           if "$CODEBUILD_SRC_DIR/$function_dir/lambda_test.py" -nt "$CODEBUILD_SRC_DIR/$function_dir/lambda_test.py"; then
+            chmod -R o+rX .
             cd $function_dir && zip lambda_test.zip lambda_test.py
+            chmod -R o+rX .
             aws s3 cp lambda_test.zip s3://test-lambda-code-1/$(basename $function_dir)/lambda_test.zip
             aws lambda update-function-code --function-name arn:aws:lambda:ap-south-1:474532148129:function:test --s3-bucket test-lambda-code-1 --s3-key $(basename $function_dir)/lambda_test.zip
           else
