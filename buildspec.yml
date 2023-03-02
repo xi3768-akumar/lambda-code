@@ -15,9 +15,9 @@ phases:
       - echo Entered the build phase...
       - for function_dir in $(find lambda/ -type f -name "*.py" -exec dirname {} \; | sort | uniq); do
           if [[ "$CODEBUILD_SRC_DIR/$function_dir/*.py" -nt "$CODEBUILD_SRC_DIR/$function_dir/*.zip" ]]; then
-            cd $function_dir && zip test.zip test.py
+            cd $function_dir && zip *.zip .py
             aws s3 cp test.zip s3://test-lambda-code-1/$(basename $function_dir)/*.zip
-            aws lambda update-function-code --function-name arn:aws:lambda:us-east-1:287882505924:function:$(basename $function_dir) --s3-bucket test-lambda-code-1 --s3-key $(basename $function_dir)/*.zip
+            aws lambda update-function-code --function-name arn:aws:lambda:ap-south-1:474532148129:function:$(basename $function_dir) --s3-bucket test-lambda-code-1 --s3-key $(basename $function_dir)/*.zip
           else
             echo Skipping build for function $(basename $function_dir) because there were no changes to the code
           fi
