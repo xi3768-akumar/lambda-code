@@ -26,8 +26,9 @@ phases:
   #     - echo Installation Completed...
   build:
     commands:
-      folders=`ls`
-      for value in ${folders};
+      - folders=`ls`
+      - for value in $folders;
         do
-          echo $value;
+            echo $value;
         done
+      - echo "run the next command"
