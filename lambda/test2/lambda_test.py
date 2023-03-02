@@ -1,4 +1,4 @@
-# Test lambda_test 2 Hello data1
+# Test lambda_test 2 Hello data2
 import json
 
 print('Loading function')
