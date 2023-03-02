@@ -16,6 +16,7 @@ phases:
       - echo Building first lambda
       - cd lambda/test1 && zip test.zip test.py
       - aws s3 cp test.zip s3://test-lambda-code-1/lambda/test.zip
+      - cd ../..
       - aws lambda update-function-code --function-name  arn:aws:lambda:ap-south-1:474532148129:function:test --s3-bucket test-lambda-code-1 --s3-key lambda/test.zip
       - echo Finishing Lambda 1
       - echo Building second lambda
