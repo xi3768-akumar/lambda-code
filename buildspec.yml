@@ -14,8 +14,8 @@ phases:
     commands:
       - echo Entered the build phase...
 #      - cd lambda/test-1 && zip test.zip test.py
-      - ls 
-      - cd lambda
+      - cd lambda 
+      - ls
 #      - aws s3 cp test.zip s3://test-lambda-code-1/test-1/test.zip
 #      - aws lambda update-function-code --function-name  arn:aws:lambda:ap-south-1:474532148129:function:test --s3-bucket test-lambda-code-1 --s3-key test-1/test.zip
 #    finally:
