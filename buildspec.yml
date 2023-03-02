@@ -1,11 +1,10 @@
 version: 0.2
 
 variables:
-  bucket_name: "test-lambda-code-1"
+  bucket_name: "krny-lambda-code"
   lambda_functions:
     - test-1
     - test-2
-    
 
 phases:
   install:
@@ -20,7 +19,7 @@ phases:
   build:
     commands:
       - echo Entered the build phase...
-      - echo "Lambda functions:" $lambda_functions
+      - echo "Lambda functions: $lambda_functions"
       - |
         for lambda_function in $lambda_functions; do
           cd lambda/$lambda_function && zip test.zip test.py
