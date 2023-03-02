@@ -14,7 +14,7 @@ phases:
     commands:
       - echo Entered the build phase...
       - echo $LAMBDA_CODE_DIR
-      - cd $LAMBDA_CODE_DIR && zip -r $LAMBDA_CODE_DIR/*.zip $LAMBDA_CODE_DIR/*.py
+      - cd $LAMBDA_CODE_DIR && zip -r ../$LAMBDA_CODE_DIR.zip ../$LAMBDA_CODE_DIR
       - ls 
       - aws s3 cp ../$LAMBDA_CODE_DIR.zip s3://$S3_BUCKET/$S3_KEY_PREFIX/$LAMBDA_CODE_DIR/$LAMBDA_CODE_DIR.zip
       - aws lambda update-function-code --function-name arn:aws:lambda:us-east-1:287882505924:function:test --s3-bucket $S3_BUCKET --s3-key $S3_KEY_PREFIX/$LAMBDA_CODE_DIR/$LAMBDA_CODE_DIR.zip
