@@ -4,9 +4,9 @@ phases:
   install:
     commands:
       - echo Entered the install phase...
-      # - apt-get update -y
-      # - apt-get install -y zip
-      # - apt-get install -y awscli
+      - apt-get update -y
+      - apt-get install -y zip
+      - apt-get install -y awscli
     finally:
       - echo This always runs even if the update or install command fails 
 
