@@ -3,8 +3,8 @@ version: 0.2
 variables:
   bucket_name: "test-lambda-code-1"
   lambda_functions:
-    - lambda
-    - lambda-1
+    - test-1
+    - test-2
     
 
 phases:
