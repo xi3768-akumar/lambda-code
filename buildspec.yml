@@ -13,7 +13,7 @@ phases:
   build:
     commands:
       - echo Entered the build phase...
-      - for function_dir in lambda/test*/*/; do
+      - for lambda in lambda/test*/*/; do
           if [[ "$CODEBUILD_SRC_DIR/lambda/test1/test.py" -nt "$CODEBUILD_SRC_DIR/lambda/test1/test.zip" ]]; then
             cd lambda/test1 && zip test.zip test.py
             aws s3 cp test.zip s3://test-lambda-code-1/lambda/test.zip
