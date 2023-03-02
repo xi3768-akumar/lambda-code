@@ -22,5 +22,5 @@ phases:
             echo Skipping build for function $(basename $function_dir) because there were no changes to the code
           fi
         done
-  finally:
-    - echo Installation Completed...
+    finally:
+      - echo Installation Completed...
