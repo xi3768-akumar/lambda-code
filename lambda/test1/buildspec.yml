@@ -1,0 +1,26 @@
+version: 0.2
+
+phases:
+  install:
+    commands:
+      - echo Entered the install phase...
+      - apt-get update -y
+      - apt-get install -y zip
+      - apt-get install -y awscli
+    finally:
+      - echo This always runs even if the update or install command fails 
+    
+  build:
+    commands:
+      - echo Entered the build phase...
+      - echo Building first lambda
+      - cd lambda/test1 && zip test.zip test.py
+      - aws s3 cp test.zip s3://test-lambda-code-1/lambda/test.zip
+      - aws lambda update-function-code --function-name  arn:aws:lambda:ap-south-1:474532148129:function:test --s3-bucket test-lambda-code-1 --s3-key lambda/test.zip
+      - echo Finishing Lambda 1
+    finally:
+      - echo This always runs even if the install command fails
+  post_build:
+    commands:
+      - echo Entered the post_build phase...
+      - echo Build completed on `date`
