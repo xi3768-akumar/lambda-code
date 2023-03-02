@@ -9,30 +9,30 @@ phases:
       - apt-get install -y awscli
     finally:
       - echo This always runs even if the update or install command fails 
-  build:
-    commands:
-      - echo Entered the build phase...
-      - cd lambda/test1 && zip test.zip test.py
-      - ls 
-      - aws s3 cp test.zip s3://test-lambda-code-1/lambda/test.zip
-      - aws lambda update-function-code --function-name  arn:aws:lambda:ap-south-1:474532148129:function:test --s3-bucket test-lambda-code-1 --s3-key lambda/test.zip
-    finally:
-      - echo This always runs even if the install command fails
-  post_build:
-    commands:
-      - echo Entered the post_build phase...
-      - echo Build completed on `date`
-
   # build:
   #   commands:
   #     - echo Entered the build phase...
-  #     - echo Code build src $CODEBUILD_SRC_DIR
-  #     - echo function dir $function_dir
-  #     - |
-  #       if [ "$CODEBUILD_SRC_DIR/lambda/test1/test.py" -nt "$CODEBUILD_SRC_DIR/lambda/test1/test.zip" ]; then
-  #         cd lambda/test1 && zip test.zip test.py
-  #         aws s3 cp test.zip s3://test-lambda-code-1/lambda/test.zip
-  #         aws lambda update-function-code --function-name  arn:aws:lambda:ap-south-1:474532148129:function:test --s3-bucket test-lambda-code-1 --s3-key lambda/test1.zip
-  #       fi
+  #     - cd lambda/test1 && zip test.zip test.py
+  #     - ls 
+  #     - aws s3 cp test.zip s3://test-lambda-code-1/lambda/test.zip
+  #     - aws lambda update-function-code --function-name  arn:aws:lambda:ap-south-1:474532148129:function:test --s3-bucket test-lambda-code-1 --s3-key lambda/test.zip
   #   finally:
-  #     - echo Installation Completed...
+  #     - echo This always runs even if the install command fails
+  # post_build:
+  #   commands:
+  #     - echo Entered the post_build phase...
+  #     - echo Build completed on `date`
+
+  build:
+    commands:
+      - echo Entered the build phase...
+      - echo Code build src $CODEBUILD_SRC_DIR
+      - echo function dir $function_dir
+      - |
+        if [ "$CODEBUILD_SRC_DIR/lambda/test1/test.py" -nt "$CODEBUILD_SRC_DIR/lambda/test1/test.zip" ]; then
+          cd lambda/test1 && zip test.zip test.py
+          aws s3 cp test.zip s3://test-lambda-code-1/lambda/test.zip
+          aws lambda update-function-code --function-name  arn:aws:lambda:ap-south-1:474532148129:function:test --s3-bucket test-lambda-code-1 --s3-key lambda/test.zip
+        fi
+    finally:
+      - echo Installation Completed...
