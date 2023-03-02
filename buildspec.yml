@@ -11,15 +11,47 @@ phases:
       - echo This always runs even if the update or install command fails 
 
   build:
-    commands:
-      - echo Entered the build phase...
-      - cd lambda/test1 && zip test.zip test.py
-      - ls 
-      - aws s3 cp test.zip s3://test-lambda-code-1/lambda/test.zip
-      - aws lambda update-function-code --function-name  arn:aws:lambda:ap-south-1:474532148129:function:test --s3-bucket test-lambda-code-1 --s3-key lambda/test1.zip
-    finally:
-      - echo This always runs even if the install command fails
-  post_build:
-    commands:
-      - echo Entered the post_build phase...
-      - echo Build completed on `date`
+  commands:
+    - echo Entered the build phase...
+    - for function_dir in lambda/*/; do
+        if [[ "$CODEBUILD_SRC_DIR/$function_dir/test.py" -nt "$CODEBUILD_SRC_DIR/$function_dir/test.zip" ]]; then
+          cd $function_dir && zip test.zip test.py
+          aws s3 cp test.zip s3://test-lambda-code-1/$(basename $function_dir)/test.zip
+          aws lambda update-function-code --function-name arn:aws:lambda:ap-south-1:474532148129:function:$(basename $function_dir) --s3-bucket test-lambda-code-1 --s3-key $(basename $function_dir)/test.zip
+        else
+          echo Skipping build for function $(basename $function_dir) because there were no changes to the code
+        fi
+      done
+  finally:
+    - echo Installation Completed...
+
+
+#   build:
+#     commands:
+#       - echo Entered the build phase...
+#       - cd lambda/test1 && zip test.zip test.py
+#       - ls 
+#       - aws s3 cp test.zip s3://test-lambda-code-1/lambda/test.zip
+#       - aws lambda update-function-code --function-name  arn:aws:lambda:ap-south-1:474532148129:function:test --s3-bucket test-lambda-code-1 --s3-key lambda/test1.zip
+#     finally:
+#       - echo This always runs even if the install command fails
+#   post_build:
+#     commands:
+#       - echo Entered the post_build phase...
+#       - echo Build completed on `date`
+
+
+# build:
+#   commands:
+#     - echo Entered the build phase...
+#     - for function_dir in lambda/*/; do
+#         if [[ "$CODEBUILD_SRC_DIR/$function_dir/test.py" -nt "$CODEBUILD_SRC_DIR/$function_dir/test.zip" ]]; then
+#           cd $function_dir && zip test.zip test.py
+#           aws s3 cp test.zip s3://krny-lambda-code/$(basename $function_dir)/test.zip
+#           aws lambda update-function-code --function-name arn:aws:lambda:us-east-1:287882505924:function:$(basename $function_dir) --s3-bucket krny-lambda-code --s3-key $(basename $function_dir)/test.zip
+#         else
+#           echo Skipping build for function $(basename $function_dir) because there were no changes to the code
+#         fi
+#       done
+#   finally:
+#     - echo Installation Completed...
