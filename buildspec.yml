@@ -1,5 +1,12 @@
 version: 0.2
 
+variables:
+  bucket_name: "test-lambda-code-1"
+  lambda_functions:
+    - lambda
+    - lambda-1
+    
+
 phases:
   install:
     commands:
@@ -13,11 +20,20 @@ phases:
   build:
     commands:
       - echo Entered the build phase...
-      - echo $LAMBDA_CODE_DIR
-      - cd $LAMBDA_CODE_DIR && zip -r ../$LAMBDA_CODE_DIR.zip ../$LAMBDA_CODE_DIR
-      - ls 
-      - aws s3 cp ../$LAMBDA_CODE_DIR.zip s3://$S3_BUCKET/$S3_KEY_PREFIX/$LAMBDA_CODE_DIR/$LAMBDA_CODE_DIR.zip
-      - aws lambda update-function-code --function-name arn:aws:lambda:us-east-1:287882505924:function:test --s3-bucket $S3_BUCKET --s3-key $S3_KEY_PREFIX/$LAMBDA_CODE_DIR/$LAMBDA_CODE_DIR.zip
+      - |
+        for lambda_function in $lambda_functions; do
+          cd lambda/$lambda_function && zip test.zip test.py
+          aws s3 cp test.zip s3://$bucket_name/$lambda_function/test.zip
+          if ! aws lambda get-function --function-name arn:aws:lambda:us-east-1:287882505924:function:$lambda_function >/dev/null 2>&1; then
+            aws lambda create-function --function-name $lambda_function --runtime python3.8 --handler test.lambda_handler --role arn:aws:iam::287882505924:role/LambdaExecutionRole --code S3Bucket=$bucket_name,S3Key=$lambda_function/test.zip
+          else
+            aws lambda update-function-code --function-name arn:aws:lambda:us-east-1:287882505924:function:$lambda_function --s3-bucket $bucket_name --s3-key $lambda_function/test.zip
+            if ! cmp -s lambda/$lambda_function/test.py <(aws lambda get-function --function-name arn:aws:lambda:us-east-1:287882505924:function:$lambda_function --query 'Code.Location' --output text | xargs aws s3 cp - - | zcat); then
+              aws s3 cp lambda/$lambda_function/test.py s3://$bucket_name/$lambda_function/test.py
+              aws lambda update-function-configuration --function-name arn:aws:lambda:us-east-1:287882505924:function:$lambda_function --handler test.lambda_handler --timeout 3 --memory-size 128 --environment Variables={BUCKET_NAME=$bucket_name,LAMBDA_FUNCTION=$lambda_function}
+            fi
+          fi
+        done
     finally:
       - echo Installation Completed...
 
@@ -25,4 +41,3 @@ phases:
     commands:
       - echo Entered the post_build phase...
       - echo Build completed on `date`
-
