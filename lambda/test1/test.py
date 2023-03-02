@@ -1,4 +1,4 @@
-# Test 1 is going on to test Lets Play Abhishek
+# Test 1 is going on to test Lets Play Platform team
 import json
 
 print('Loading function')
@@ -11,5 +11,4 @@ def lambda_handler(event, context):
     print("value3 = " + event['key3'])
     return event['key1']  # Echo back the first key value
     #raise Exception('Something went wrong')
-    # gentleman abhishek
     # test lambda

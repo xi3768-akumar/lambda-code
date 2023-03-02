@@ -1,4 +1,4 @@
-# Test 2 working fine ABHISHEK
+# Test 2 working fine platform team
 import json
 
 print('Loading function')
