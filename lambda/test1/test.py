@@ -9,7 +9,6 @@ def lambda_handler(event, context):
     print("value1 = " + event['key1'])
     print("value2 = " + event['key2'])
     print("value3 = " + event['key3'])
+    print("value4 = " + event['key4'])
     return event['key1']  # Echo back the first key value
-    #raise Exception('Something went wrong')
-    # gentleman abhishek
-    # test lambda
+    print("Changes made to this lambda only")
