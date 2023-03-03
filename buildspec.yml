@@ -21,7 +21,7 @@ phases:
             chmod -R o+rX .
             chmod -r 400 test.zip
             aws s3 cp test.zip s3://test-lambda-code-1/$(basename $function_dir)/test.zip
-            aws lambda update-function-code --function-name arn:aws:lambda:ap-south-1:474532148129:function:test --s3-bucket test-lambda-code-1 --s3-key $(basename $function_dir)/lambda_test.zip
+            aws lambda update-function-code --function-name arn:aws:lambda:ap-south-1:474532148129:function:test --s3-bucket test-lambda-code-1 --s3-key $(basename $function_dir)/test.zip
           else
             echo Skipping build for function $(basename $function_dir) because there were no changes to the code
           fi
